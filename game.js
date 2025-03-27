@@ -40,7 +40,8 @@ class KpopArtistGame {
         this.guessesInCurrentGame = 0;
         this.isGameWon = false;
         this.isGiveUp = false;
-
+        this.leaderboard = new Leaderboard();
+        
         this.initializeElements();
         this.bindEvents();
         this.startNewGame();
@@ -191,7 +192,6 @@ class Leaderboard {
     constructor() {
         this.leaderboardKey = 'kpopGameLeaderboard';
         this.maxLeaderboardEntries = 10;
-        this.leaderboard = new Leaderboard();
     }
 
     // Add a new score to the leaderboard
@@ -279,7 +279,6 @@ class Leaderboard {
         this.displayLeaderboard();
     }
 }
-
 
 // Initialize the game when the page loads
 document.addEventListener('DOMContentLoaded', () => {
