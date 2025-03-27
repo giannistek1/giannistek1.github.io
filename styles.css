@@ -61,3 +61,31 @@ button:hover {
 .correct { background-color: green; color: white; }
 .close { background-color: orange; color: white; }
 .incorrect { background-color: grey; color: white; }
+
+#leaderboard-container {
+    margin-top: 20px;
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#leaderboard-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#leaderboard-container th, 
+#leaderboard-container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#leaderboard-container th {
+    background-color: #2196f3;
+    color: white;
+}
+
+#leaderboard-container tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
