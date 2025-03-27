@@ -55,6 +55,17 @@ class KpopArtistGame {
         this.guessHistory = document.getElementById('guess-history');
         this.winningStreakElement = document.getElementById('winning-streak');
         this.averageGuessesElement = document.getElementById('avg-guesses');
+
+        // Add a clear leaderboard button
+        const clearLeaderboardButton = document.createElement('button');
+        clearLeaderboardButton.textContent = 'Clear Leaderboard';
+        clearLeaderboardButton.addEventListener('click', () => {
+            this.leaderboard.clearLeaderboard();
+        });
+        document.getElementById('input-section').appendChild(clearLeaderboardButton);
+
+        // Display initial leaderboard
+        this.leaderboard.displayLeaderboard();
     }
 
     bindEvents() {
@@ -157,6 +168,9 @@ class KpopArtistGame {
 
         this.giveUpButton.style.display = 'none';
         this.submitButton.style.display = 'none';
+
+              // Add to leaderboard
+        this.leaderboard.addScore(null, this.guessesInCurrentGame);
     }
 
     giveUp() {
@@ -172,6 +186,100 @@ class KpopArtistGame {
         this.submitButton.style.display = 'none';
     }
 }
+
+class Leaderboard {
+    constructor() {
+        this.leaderboardKey = 'kpopGameLeaderboard';
+        this.maxLeaderboardEntries = 10;
+        this.leaderboard = new Leaderboard();
+    }
+
+    // Add a new score to the leaderboard
+    addScore(playerName, guessCount) {
+        // Prompt for player name if not provided
+        if (!playerName) {
+            playerName = prompt('Enter your name for the leaderboard:') || 'Anonymous';
+        }
+
+        // Get current leaderboard
+        let leaderboard = this.getLeaderboard();
+
+        // Create new entry
+        const newEntry = {
+            name: playerName,
+            guesses: guessCount,
+            date: new Date().toLocaleDateString()
+        };
+
+        // Add new entry and sort
+        leaderboard.push(newEntry);
+        leaderboard.sort((a, b) => a.guesses - b.guesses);
+
+        // Trim to max entries
+        leaderboard = leaderboard.slice(0, this.maxLeaderboardEntries);
+
+        // Save to localStorage
+        localStorage.setItem(this.leaderboardKey, JSON.stringify(leaderboard));
+
+        // Update display
+        this.displayLeaderboard();
+    }
+
+    // Retrieve leaderboard from localStorage
+    getLeaderboard() {
+        const savedLeaderboard = localStorage.getItem(this.leaderboardKey);
+        return savedLeaderboard ? JSON.parse(savedLeaderboard) : [];
+    }
+
+    // Display leaderboard in the UI
+    displayLeaderboard() {
+        // Create or get leaderboard container
+        let leaderboardContainer = document.getElementById('leaderboard-container');
+        if (!leaderboardContainer) {
+            leaderboardContainer = document.createElement('div');
+            leaderboardContainer.id = 'leaderboard-container';
+            leaderboardContainer.innerHTML = '<h2>Leaderboard (Lowest Guesses)</h2>';
+            document.querySelector('.container').appendChild(leaderboardContainer);
+        }
+
+        // Clear previous entries
+        const leaderboard = this.getLeaderboard();
+        
+        // Create table for leaderboard
+        const table = document.createElement('table');
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Guesses</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${leaderboard.map((entry, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${entry.name}</td>
+                        <td>${entry.guesses}</td>
+                        <td>${entry.date}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        `;
+
+        // Clear previous table and add new one
+        leaderboardContainer.innerHTML = '<h2>Leaderboard (Lowest Guesses)</h2>';
+        leaderboardContainer.appendChild(table);
+    }
+
+    // Clear the entire leaderboard
+    clearLeaderboard() {
+        localStorage.removeItem(this.leaderboardKey);
+        this.displayLeaderboard();
+    }
+}
+
 
 // Initialize the game when the page loads
 document.addEventListener('DOMContentLoaded', () => {
