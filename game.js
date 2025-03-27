@@ -10,6 +10,24 @@ const artists = [
         albums: 10
     },
     // Add more artists here
+    {
+        artistName: "BLACKPINK",
+        groupType: "Girl Group",
+        members: 4,
+        generation: 4,
+        debutYear: 2016,
+        popularity: 85,
+        albums: 8
+    },
+    {
+        artistName: "EXO",
+        groupType: "Boy Band",
+        members: 9,
+        generation: 3,
+        debutYear: 2012,
+        popularity: 80,
+        albums: 7
+    }
 ];
 
 class KpopArtistGame {
