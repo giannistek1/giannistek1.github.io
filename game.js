@@ -598,16 +598,6 @@ const artists = [
     popularity: 70,
     albums: 1
   },
-  // H.I.N.P
-  {
-    artistName: "H.I.N.P",
-    groupType: "female",
-    members: 5,
-    generation: 5,
-    debutYear: 2023,
-    popularity: 65,
-    albums: 1
-  },
   // Heart2Hearts
   {
     artistName: "Heart2Hearts",
