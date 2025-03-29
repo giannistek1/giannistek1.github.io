@@ -93,7 +93,7 @@ const artists = [
   {
     artistName: "AOA",
     groupType: "female",
-    members: 5,
+    members: 7,
     generation: 3,
     debutYear: 2012,
     popularity: 70,
