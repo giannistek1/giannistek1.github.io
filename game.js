@@ -1303,15 +1303,6 @@ const artists = [
     albums: 2,
   },
   {
-    artistName: "PLEDIS Girlz",
-    groupType: "female",
-    members: 10,
-    generation: 3,
-    debutYear: 2016,
-    popularity: 70,
-    albums: 1,
-  },
-  {
     artistName: "PRISTIN V",
     groupType: "female",
     members: 5,
