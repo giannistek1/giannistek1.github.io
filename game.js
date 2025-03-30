@@ -734,7 +734,7 @@ const artists = [
     groupType: "female",
     members: 1,
     generation: 3,
-    debutYear: 2014,
+    debutYear: 2024,
     popularity: 85,
     albums: 1
   },
