@@ -1006,15 +1006,6 @@ const artists = [
     albums: 5,
   },
   {
-    artistName: "Lee Jinhyuk (UP10TION)",
-    groupType: "male",
-    members: 1,
-    generation: 3,
-    debutYear: 2019,
-    popularity: 75,
-    albums: 2,
-  },
-  {
     artistName: "LISA (Blackpink)",
     groupType: "female",
     members: 1,
