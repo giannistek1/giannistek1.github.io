@@ -2044,6 +2044,14 @@ class KpopArtistGame {
         this.winningStreakElement = document.getElementById('winning-streak');
         this.averageGuessesElement = document.getElementById('avg-guesses');
 
+        // Create autocomplete container
+        this.autocompleteContainer = document.createElement('div');
+        this.autocompleteContainer.id = 'autocomplete-container';
+        this.autocompleteContainer.classList.add('autocomplete-container');
+        
+        // Add the autocomplete container after the input field
+        this.artistInput.parentNode.insertBefore(this.autocompleteContainer, this.artistInput.nextSibling);
+
         // Add a clear leaderboard button
         const clearLeaderboardButton = document.createElement('button');
         clearLeaderboardButton.textContent = 'Clear Leaderboard';
@@ -2063,6 +2071,97 @@ class KpopArtistGame {
         this.artistInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.makeGuess();
         });
+        
+        // Add input event for autocomplete
+        this.artistInput.addEventListener('input', () => this.updateAutocomplete());
+        
+        // Handle clicking outside of autocomplete to close it
+        document.addEventListener('click', (e) => {
+            if (e.target !== this.artistInput && e.target !== this.autocompleteContainer) {
+                this.clearAutocomplete();
+            }
+        });
+        
+        // Focus input when autocomplete is selected
+        this.autocompleteContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('autocomplete-item')) {
+                this.artistInput.value = e.target.textContent;
+                this.clearAutocomplete();
+                this.artistInput.focus();
+            }
+        });
+        
+        // Add keyboard navigation for autocomplete
+        this.artistInput.addEventListener('keydown', (e) => {
+            const items = this.autocompleteContainer.querySelectorAll('.autocomplete-item');
+            const activeItem = this.autocompleteContainer.querySelector('.autocomplete-item.active');
+            
+            if (items.length === 0) return;
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (!activeItem) {
+                    items[0].classList.add('active');
+                } else {
+                    const index = Array.from(items).indexOf(activeItem);
+                    activeItem.classList.remove('active');
+                    items[Math.min(index + 1, items.length - 1)].classList.add('active');
+                }
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (!activeItem) {
+                    items[items.length - 1].classList.add('active');
+                } else {
+                    const index = Array.from(items).indexOf(activeItem);
+                    activeItem.classList.remove('active');
+                    items[Math.max(index - 1, 0)].classList.add('active');
+                }
+            } else if (e.key === 'Tab' || e.key === 'Enter') {
+                if (activeItem) {
+                    e.preventDefault();
+                    this.artistInput.value = activeItem.textContent;
+                    this.clearAutocomplete();
+                    
+                    if (e.key === 'Enter') {
+                        this.makeGuess();
+                    }
+                }
+            } else if (e.key === 'Escape') {
+                this.clearAutocomplete();
+            }
+        });
+    }
+
+    updateAutocomplete() {
+        const query = this.artistInput.value.trim().toLowerCase();
+        
+        // Clear previous suggestions
+        this.clearAutocomplete();
+        
+        if (query.length < 2) return;
+        
+        // Filter artists by query
+        const matches = artists.filter(artist => 
+            artist.artistName.toLowerCase().includes(query)
+        ).slice(0, 5); // Limit to 5 suggestions
+        
+        if (matches.length === 0) return;
+        
+        // Show autocomplete container
+        this.autocompleteContainer.style.display = 'block';
+        
+        // Add each match as an option
+        matches.forEach(artist => {
+            const item = document.createElement('div');
+            item.classList.add('autocomplete-item');
+            item.textContent = artist.artistName;
+            this.autocompleteContainer.appendChild(item);
+        });
+    }
+    
+    clearAutocomplete() {
+        this.autocompleteContainer.innerHTML = '';
+        this.autocompleteContainer.style.display = 'none';
     }
 
     startNewGame() {
@@ -2075,6 +2174,7 @@ class KpopArtistGame {
         this.gameMessage.textContent = 'Start guessing!';
         this.giveUpButton.style.display = 'inline-block';
         this.submitButton.style.display = 'inline-block';
+        this.clearAutocomplete();
     }
 
     getRandomArtist() {
@@ -2099,6 +2199,7 @@ class KpopArtistGame {
         }
 
         this.artistInput.value = '';
+        this.clearAutocomplete();
     }
 
     checkGuess(guessedArtist, targetArtist) {
@@ -2157,7 +2258,7 @@ class KpopArtistGame {
         this.giveUpButton.style.display = 'none';
         this.submitButton.style.display = 'none';
 
-              // Add to leaderboard
+        // Add to leaderboard
         this.leaderboard.addScore(null, this.guessesInCurrentGame);
     }
 
@@ -2174,6 +2275,7 @@ class KpopArtistGame {
         this.submitButton.style.display = 'none';
     }
 }
+
 // Initialize the game when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     new KpopArtistGame();
