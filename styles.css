@@ -89,3 +89,31 @@ button:hover {
 #leaderboard-container tr:nth-child(even) {
     background-color: #f2f2f2;
 }
+
+.autocomplete-container {
+    position: absolute;
+    width: calc(100% - 20px);
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-top: none;
+    z-index: 1000;
+    background: white;
+    display: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border-radius: 0 0 4px 4px;
+}
+
+.autocomplete-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.autocomplete-item:hover, .autocomplete-item.active {
+    background-color: #f2f2f2;
+}
+
+#artist-input {
+    position: relative;
+}
