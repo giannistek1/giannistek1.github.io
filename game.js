@@ -2028,6 +2028,7 @@ class KpopArtistGame {
         this.isGameWon = false;
         this.isGiveUp = false;
         this.leaderboard = new Leaderboard();
+        this.requiredGuessesForGiveUp = 6; // Number of guesses before Give Up is available
         
         this.initializeElements();
         this.bindEvents();
@@ -2044,6 +2045,22 @@ class KpopArtistGame {
         this.winningStreakElement = document.getElementById('winning-streak');
         this.averageGuessesElement = document.getElementById('avg-guesses');
 
+        // Hide give up button initially
+        this.giveUpButton.style.display = 'none';
+
+        // Create a new row for buttons
+        this.buttonsRow = document.createElement('div');
+        this.buttonsRow.id = 'buttons-row';
+        this.buttonsRow.classList.add('buttons-row');
+        
+        // Move existing buttons to the new row
+        this.buttonsRow.appendChild(this.newGameButton);
+        this.buttonsRow.appendChild(this.giveUpButton);
+        
+        // Add the buttons row after the input section
+        const inputSection = document.getElementById('input-section');
+        inputSection.parentNode.insertBefore(this.buttonsRow, inputSection.nextSibling);
+
         // Create autocomplete container
         this.autocompleteContainer = document.createElement('div');
         this.autocompleteContainer.id = 'autocomplete-container';
@@ -2052,13 +2069,14 @@ class KpopArtistGame {
         // Add the autocomplete container right after the input
         document.getElementById('input-section').appendChild(this.autocompleteContainer);
 
-        // Add a clear leaderboard button
+        // Add a clear leaderboard button to the buttons row
         const clearLeaderboardButton = document.createElement('button');
         clearLeaderboardButton.textContent = 'Clear Leaderboard';
+        clearLeaderboardButton.id = 'clear-leaderboard';
         clearLeaderboardButton.addEventListener('click', () => {
             this.leaderboard.clearLeaderboard();
         });
-        document.getElementById('input-section').appendChild(clearLeaderboardButton);
+        this.buttonsRow.appendChild(clearLeaderboardButton);
 
         // Display initial leaderboard
         this.leaderboard.displayLeaderboard();
@@ -2178,7 +2196,10 @@ class KpopArtistGame {
         this.isGiveUp = false;
         this.artistInput.value = '';
         this.gameMessage.textContent = 'Start guessing!';
-        this.giveUpButton.style.display = 'inline-block';
+        
+        // Hide give up button at start of new game
+        this.giveUpButton.style.display = 'none';
+        
         this.submitButton.style.display = 'inline-block';
         this.clearAutocomplete();
     }
@@ -2202,6 +2223,23 @@ class KpopArtistGame {
 
         if (feedback.isArtistNameCorrect) {
             this.handleCorrectGuess();
+        } else {
+            // Show "Give Up" button after required number of guesses
+            if (this.guessesInCurrentGame >= this.requiredGuessesForGiveUp) {
+                this.giveUpButton.style.display = 'inline-block';
+                
+                // Only show this message on the 6th guess
+                if (this.guessesInCurrentGame === this.requiredGuessesForGiveUp) {
+                    this.gameMessage.textContent = 'Feeling stuck? You can now give up if you want.';
+                    
+                    // Reset message after 5 seconds
+                    setTimeout(() => {
+                        if (!this.isGameWon && !this.isGiveUp) {
+                            this.gameMessage.textContent = 'Keep guessing!';
+                        }
+                    }, 5000);
+                }
+            }
         }
 
         this.artistInput.value = '';
@@ -2270,6 +2308,7 @@ class KpopArtistGame {
 
     giveUp() {
         this.isGiveUp = true;
+        this.winningStreak = 0; // Reset winning streak on give up
         this.totalGamesPlayed++;
         this.totalGuesses += this.guessesInCurrentGame;
 
