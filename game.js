@@ -2044,13 +2044,20 @@ class KpopArtistGame {
         this.winningStreakElement = document.getElementById('winning-streak');
         this.averageGuessesElement = document.getElementById('avg-guesses');
 
-        // Create autocomplete container
+        // Create input wrapper div for proper positioning
+        const inputWrapper = document.createElement('div');
+        inputWrapper.id = 'input-wrapper';
+        inputWrapper.classList.add('input-wrapper');
+        
+        // Replace input with wrapper
+        this.artistInput.parentNode.insertBefore(inputWrapper, this.artistInput);
+        inputWrapper.appendChild(this.artistInput);
+        
+        // Create autocomplete container inside wrapper
         this.autocompleteContainer = document.createElement('div');
         this.autocompleteContainer.id = 'autocomplete-container';
         this.autocompleteContainer.classList.add('autocomplete-container');
-        
-        // Add the autocomplete container after the input field
-        this.artistInput.parentNode.insertBefore(this.autocompleteContainer, this.artistInput.nextSibling);
+        inputWrapper.appendChild(this.autocompleteContainer);
 
         // Add a clear leaderboard button
         const clearLeaderboardButton = document.createElement('button');
