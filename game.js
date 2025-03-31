@@ -2044,20 +2044,13 @@ class KpopArtistGame {
         this.winningStreakElement = document.getElementById('winning-streak');
         this.averageGuessesElement = document.getElementById('avg-guesses');
 
-        // Create input wrapper div for proper positioning
-        const inputWrapper = document.createElement('div');
-        inputWrapper.id = 'input-wrapper';
-        inputWrapper.classList.add('input-wrapper');
-        
-        // Replace input with wrapper
-        this.artistInput.parentNode.insertBefore(inputWrapper, this.artistInput);
-        inputWrapper.appendChild(this.artistInput);
-        
-        // Create autocomplete container inside wrapper
+        // Create autocomplete container
         this.autocompleteContainer = document.createElement('div');
         this.autocompleteContainer.id = 'autocomplete-container';
         this.autocompleteContainer.classList.add('autocomplete-container');
-        inputWrapper.appendChild(this.autocompleteContainer);
+        
+        // Add the autocomplete container right after the input
+        document.getElementById('input-section').appendChild(this.autocompleteContainer);
 
         // Add a clear leaderboard button
         const clearLeaderboardButton = document.createElement('button');
@@ -2153,6 +2146,12 @@ class KpopArtistGame {
         ).slice(0, 5); // Limit to 5 suggestions
         
         if (matches.length === 0) return;
+        
+        // Calculate position for dropdown
+        const inputRect = this.artistInput.getBoundingClientRect();
+        this.autocompleteContainer.style.width = inputRect.width + 'px';
+        this.autocompleteContainer.style.left = (inputRect.left + window.scrollX) + 'px';
+        this.autocompleteContainer.style.top = (inputRect.bottom + window.scrollY) + 'px';
         
         // Show autocomplete container
         this.autocompleteContainer.style.display = 'block';
@@ -2282,6 +2281,17 @@ class KpopArtistGame {
         this.submitButton.style.display = 'none';
     }
 }
+
+// Resize event to reposition dropdown when window is resized
+window.addEventListener('resize', () => {
+    const game = document.querySelector('game-instance');
+    if (game && game.artistInput && game.autocompleteContainer.style.display === 'block') {
+        const inputRect = game.artistInput.getBoundingClientRect();
+        game.autocompleteContainer.style.width = inputRect.width + 'px';
+        game.autocompleteContainer.style.left = (inputRect.left + window.scrollX) + 'px';
+        game.autocompleteContainer.style.top = (inputRect.bottom + window.scrollY) + 'px';
+    }
+});
 
 // Initialize the game when the page loads
 document.addEventListener('DOMContentLoaded', () => {
