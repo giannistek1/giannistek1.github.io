@@ -90,25 +90,17 @@ button:hover {
     background-color: #f2f2f2;
 }
 
-.input-wrapper {
-    position: relative;
-    width: 100%;
-}
-
 .autocomplete-container {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
+    position: fixed;
     max-height: 200px;
     overflow-y: auto;
     border: 1px solid #ddd;
-    border-top: none;
     z-index: 1000;
     background: white;
     display: none;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    border-radius: 0 0 4px 4px;
+    border-radius: 4px;
+    margin-top: 2px;
 }
 
 .autocomplete-item {
@@ -121,7 +113,6 @@ button:hover {
     background-color: #f2f2f2;
 }
 
-#artist-input {
-    width: 100%;
-    box-sizing: border-box;
+#input-section {
+    position: relative;
 }
